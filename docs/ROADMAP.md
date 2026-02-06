@@ -7,7 +7,10 @@
 
 ## 🟡 Phase 1: The Data Engine & Visibility
 - [ ] **Step 1.1: Database Schema.** Define DynamoDB tables for `Config` (Assets to trade), `Ledger` (History), and `Portfolio` (Current State).
-- [ ] **Step 1.2: Market Data Ingest.** Lambda to fetch Yahoo Finance (Daily Candles) -> S3 Parquet.
+- [ ] **Step 1.2: Market Data Ingest.** Lambda to fetch Daily Candles -> S3 Parquet.
+  - **Bootstrap (One-time):** Tiingo Free Tier (50+ years historical backfill).
+  - **Daily Drip:** Yahoo Finance (ongoing updates, $0/month).
+  - **Rebuild (Optional):** Tiingo Paid ($30) if data needs refresh.
 - [ ] **Step 1.3: The Regime Filter (Circuit Breaker).**
   - Logic: If S&P500 < 200-day MA, write `market_status: BEAR` to DynamoDB.
 - [ ] **Step 1.4: The Daily Briefing (Notifications).**
@@ -15,7 +18,7 @@
   - **Goal:** Receive a daily "Pulse Check" (Market Status + Cash Position) every morning at 09:00.
 
 ## 🔴 Phase 2: The Alpha Specialist (Machine Learning)
-- [ ] **Step 2.1: Feature Engineering.** Implement RSI, EMA, MACD, **ADX** (Volatility), and **OBV** (Volume) on **1-Day** candles.
+- [ ] **Step 2.1: Feature Engineering.** Implement RSI, EMA, MACD, **ADX** (Volatility), **OBV** (Volume), and **ATR** (Stop Loss Calc) on **1-Day** candles.
 - [ ] **Step 2.2: The "One-Asset, One-Model" Pipeline.**
   - Fargate Task: Pulls data for Asset X -> Trains XGBoost -> Saves Model to S3.
   - **Target:** Predict "High > Close + 3% within 5 Days".

@@ -12,8 +12,8 @@ trigger: always_on
 ## 2. The "Swing Sniper" Strategy
 - **Timeframe:** Daily Candles ONLY.
 - **Hold Time:** 3-10 Days.
-- **Minimum Trade:** $2,000 (to reduce fee drag).
-- **Stop Loss:** Hard -5% on all positions.
+- **Position Sizing:** Risk-based. Max **2% of portfolio** at risk per trade.
+- **Stop Loss:** Dynamic **2× ATR** (adapts to each asset's volatility).
 
 ## 3. The "Zero-Bug" Policy
 - **Coverage:** 100% Branch Coverage required on `src/modules/*`.

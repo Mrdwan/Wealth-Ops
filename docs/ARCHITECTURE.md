@@ -1,7 +1,7 @@
 # 🏛️ Wealth-Ops v2.0 Architecture
 
 ## 1. Core Philosophy
-A cloud-native, automated hedge fund for a **Single User (Irish Tax Resident)**.
+A cloud-native, automated trading system for a **Solo Trader (Irish Tax Resident)**.
 - **Strategy:** "The Swing Sniper" (Daily Candles, 3-10 day hold).
 - **Tax Logic:** Minimize ETFs (41% Tax). Prioritize Individual Stocks (33% CGT).
 - **Quality:** 100% Test Coverage required for all financial logic.
@@ -14,11 +14,18 @@ A cloud-native, automated hedge fund for a **Single User (Irish Tax Resident)**.
 - **State Store:** AWS DynamoDB (Ledger, Holdings, Config).
 - **Data Lake:** AWS S3 (Parquet History, Model Artifacts).
 - **Orchestration:** AWS Step Functions (Visual Workflow).
+- **Data Sources (Bootstrap + Drip Strategy):**
+    - **Bootstrap:** Tiingo Free Tier (One-time historical backfill, 50+ years).
+    - **Daily Drip:** Yahoo Finance (Ongoing daily candle updates, $0/month).
+    - **Rebuild:** Tiingo Paid ($30, on-demand if data corruption detected).
 
 ## 3. The "One-Asset, One-Model" Policy
 We train a unique XGBoost Classifier for each active asset in `DynamoDB:Config`.
-- **Input:** 1-Day Candles (OHLCV) + Technicals (RSI, EMA, MACD, ADX, **OBV/Volume-Ratio**).
+- **Input:** 1-Day Candles (OHLCV) + Technicals (RSI, EMA, MACD, ADX, **OBV/Volume-Ratio**, **ATR**).
 - **Target:** "Swing Probability" (Price > Current + 3% in 5 days).
+- **Retrain Schedule:**
+    - **On-Demand:** Retrain when backtest accuracy drops below 60%.
+    - **Monthly Fallback:** Force retrain if 30 days pass without a refresh.
 
 ## 4. The "Swing Sniper" Trading Strategy
 This system is optimized for an **Irish Tax Resident** managing personal capital. The default state is **100% CASH** unless a high-probability setup is confirmed.
@@ -44,12 +51,18 @@ We require **Three Green Lights** to enter a trade. If any light is RED, we stay
 Before execution, we apply **Correlation Controls**:
 1.  **Sector Limit:** Max **1 Position** per Sector (e.g., Tech, Finance, Energy).
     -   *If multiple signals:* Pick the one with the highest Probability Score.
-2.  **News Veto:** The LLM scans for negative sentiment/uncertainty.
+2.  **News Veto (LLM Sentiment Check):**
+    -   **Daily Scanning:** FinBERT (Local, free). Fast sentiment classification.
+    -   **Pre-Trade Verification:** DeepSeek-V3 API (~$0.0001/call). Only triggered on BUY/SELL decisions.
+    -   **Fallback:** Gemini Flash (if DeepSeek fails).
+    -   **Final Fallback:** Skip the trade (if all fail).
 
 ### D. The Execution (Trade Management)
--   **Minimum Trade Size:** $2,000 (To keep fees < 0.2%).
+-   **Position Sizing (Risk-Based):**
+    -   **Max Risk Per Trade:** 2% of total portfolio.
+    -   **Formula:** `Position Size = (Portfolio × 2%) / (ATR × 2)`
 -   **Holding Period:** 3 to 10 Days (Swing Trade).
 -   **Exit Strategy:**
     -   **Take Profit:** Sell 50% at +5%, Sell remainder at Trend Reversal.
-    -   **Stop Loss:** Hard exit at -5% from Entry Price.
+    -   **Stop Loss:** Dynamic exit at **Entry Price - (2 × ATR)**. Adapts to each asset's volatility.
     -   **Time Stop:** Close position if no movement after 10 days.
