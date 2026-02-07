@@ -1,0 +1,57 @@
+# Project name ensures all containers are grouped together
+name: wealth-ops
+
+services:
+  # =============================================================================
+  # Development Container
+  # =============================================================================
+  dev:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    container_name: wealth-ops-dev
+    volumes:
+      - .:/workspaces/wealth-ops:cached
+      - wealth-ops-poetry-cache:/home/vscode/.cache/pypoetry
+    working_dir: /workspaces/wealth-ops
+    command: sleep infinity
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
+      # LocalStack connection
+      - AWS_ENDPOINT_URL=http://localstack:4566
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - AWS_DEFAULT_REGION=eu-west-1
+    depends_on:
+      - localstack
+    networks:
+      - wealth-ops-network
+
+  # =============================================================================
+  # LocalStack - AWS Emulation for Local Development
+  # =============================================================================
+  localstack:
+    image: localstack/localstack:latest
+    container_name: wealth-ops-localstack
+    ports:
+      - "4566:4566" # LocalStack Gateway
+      - "4510-4559:4510-4559" # External services port range
+    environment:
+      - SERVICES=s3,dynamodb
+      - DEBUG=0
+      - PERSISTENCE=1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    volumes:
+      - wealth-ops-localstack-data:/var/lib/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - wealth-ops-network
+
+networks:
+  wealth-ops-network:
+    driver: bridge
+
+volumes:
+  wealth-ops-poetry-cache:
+  wealth-ops-localstack-data:

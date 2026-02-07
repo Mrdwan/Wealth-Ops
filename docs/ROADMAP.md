@@ -4,18 +4,22 @@
 - [x] **Step 0.1: Context & Rules.** (Establish the AI Workflow).
 - [x] **Step 0.2: Infrastructure as Code.** Setup Terraform/CDK for S3, DynamoDB, ECR, and Step Functions.
 - [x] **Step 0.3: CI/CD Pipeline.** GitHub Actions to lint, test, and deploy Lambda/Fargate images.
+- [x] **Step 0.4: Local Dev Environment.** Docker Compose with DevContainer + LocalStack (S3/DynamoDB emulation).
 
 ## 🟢 Phase 1: The Data Engine & Visibility (Current Focus)
-- [ ] **Step 1.1: Database Schema.** Define DynamoDB tables for `Config` (Assets to trade), `Ledger` (History), and `Portfolio` (Current State).
-- [ ] **Step 1.2: Market Data Engine.** (See `specs/data-ingestion-strategy.md`)
+- [x] **Step 1.1: Database Schema.** Define DynamoDB tables for `Config` (Assets to trade), `Ledger` (History), and `Portfolio` (Current State).
+- [x] **Step 1.2: Market Data Engine.** (See `specs/data-ingestion-strategy.md`)
   - **Provider Pattern:** Primary: Tiingo (Official) -> Fallback: Yahoo Finance.
   - **Gap-Fill Logic:** Orchestrator Lambda detects and heals missing dates.
   - **Bootstrap (Bulk):** Fargate Task for initial 50-year backfill (to avoid Lambda timeouts).
-- [ ] **Step 1.3: The Regime Filter (Circuit Breaker).**
+- [x] **Step 1.3: The Regime Filter (Circuit Breaker).**
   - Logic: If S&P500 < 200-day MA, write `market_status: BEAR` to DynamoDB.
-- [ ] **Step 1.4: The Daily Briefing (Notifications).**
+- [x] **Step 1.4: The Daily Briefing (Notifications).**
   - **Tool:** Telegram Bot (Simple Webhook).
   - **Goal:** Receive a daily "Pulse Check" (Market Status + Cash Position) every morning at 09:00.
+- [ ] **Step 1.5: Lambda Entry Points & Schedulers.**
+  - Deploy Lambda handlers for DataManager, RegimeFilter, and TelegramNotifier.
+  - CloudWatch Event Rules for daily triggers (23:00 UTC data ingestion, 09:00 UTC pulse).
 
 ## 🔴 Phase 2: The Alpha Specialist (Machine Learning)
 - [ ] **Step 2.1: Feature Engineering.** Implement RSI, EMA, MACD, **ADX** (Volatility), **OBV** (Volume), and **ATR** (Stop Loss Calc) on **1-Day** candles.

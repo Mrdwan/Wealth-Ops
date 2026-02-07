@@ -19,6 +19,18 @@ A cloud-native, automated trading system for a **Solo Trader (Irish Tax Resident
     - **Fallback:** Yahoo Finance (yfinance).
     - **Resiliency:** Auto-failover and gap detection.
 
+## 2.5 Local Development (Docker Compose)
+All AWS services are emulated locally via **LocalStack** for development and testing.
+
+| Service | Container | Purpose |
+|---------|-----------|---------|
+| `dev` | `wealth-ops-dev` | Python 3.13 + Poetry dev environment |
+| `localstack` | `wealth-ops-localstack` | Emulates S3, DynamoDB locally |
+
+- **Config:** `docker-compose.yml` + `.devcontainer/devcontainer.json`
+- **AWS Endpoint:** `http://localstack:4566` (auto-configured via env vars)
+- **Persistence:** LocalStack data persists between restarts
+
 ## 3. The "One-Asset, One-Model" Policy
 We train a unique XGBoost Classifier for each active asset in `DynamoDB:Config`.
 - **Input:** 1-Day Candles (OHLCV) + Technicals (RSI, EMA, MACD, ADX, **OBV/Volume-Ratio**, **ATR**).

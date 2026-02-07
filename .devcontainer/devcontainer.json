@@ -1,8 +1,8 @@
 {
     "name": "Wealth-Ops Dev",
-    "build": {
-        "dockerfile": "Dockerfile"
-    },
+    "dockerComposeFile": ["../docker-compose.yml"],
+    "service": "dev",
+    "workspaceFolder": "/workspaces/wealth-ops",
     "features": {
         "ghcr.io/devcontainers/features/aws-cli:1": {},
         "ghcr.io/devcontainers/features/node:1": {
@@ -20,14 +20,13 @@
             "settings": {
                 "python.defaultInterpreterPath": "/usr/local/bin/python",
                 "python.testing.pytestEnabled": true,
-                "mypy-type-checker.args": [
-                    "--strict"
-                ],
+                "mypy-type-checker.args": ["--strict"],
                 "editor.formatOnSave": true
             }
         }
     },
     "postCreateCommand": "poetry install --with infra && npm install -g aws-cdk",
-    "forwardPorts": [],
+    "shutdownAction": "stopCompose",
+    "forwardPorts": [4566],
     "remoteUser": "vscode"
 }
