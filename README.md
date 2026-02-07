@@ -56,6 +56,7 @@ This project follows the **Context-First** development protocol.
 ```text
 wealth-ops-v2/
 ├── .devcontainer/          # 🐳 Dev Container (Docker-based dev environment)
+├── .pre-commit-config.yaml # 🔒 Pre-commit hooks (ruff, mypy, poetry check)
 ├── .agent/                 # 🤖 The AI Context Kernel
 │   └── rules/              # The "Laws" (Constitution, Code Standards)
 ├── docs/                   # 📜 The Truth (Architecture & Roadmap)
