@@ -1,0 +1,22 @@
+FROM public.ecr.aws/lambda/python:3.13
+
+# Install poetry
+RUN pip install poetry
+
+# Copy project files
+COPY pyproject.toml poetry.lock ${LAMBDA_TASK_ROOT}/
+
+# Export poetry dependencies to requirements.txt and install
+# We use export to avoid installing poetry itself in the final layer if we wanted multi-stage,
+# but for simplicity here we just install to the system python which Lambda uses.
+RUN poetry export -f requirements.txt --output requirements.txt --without-hashes --without dev
+RUN pip install -r requirements.txt
+
+# Copy source code
+COPY src/ ${LAMBDA_TASK_ROOT}/src/
+
+# Set PYTHONPATH to include the root so imports like 'src.shared' work
+ENV PYTHONPATH=${LAMBDA_TASK_ROOT}
+
+# CMD will be overridden by CDK for each function
+CMD ["src.lambdas.data_ingestion.handler"]

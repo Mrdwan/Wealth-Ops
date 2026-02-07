@@ -17,7 +17,7 @@
 - [x] **Step 1.4: The Daily Briefing (Notifications).**
   - **Tool:** Telegram Bot (Simple Webhook).
   - **Goal:** Receive a daily "Pulse Check" (Market Status + Cash Position) every morning at 09:00.
-- [ ] **Step 1.5: Lambda Entry Points & Schedulers.**
+- [x] **Step 1.5: Lambda Entry Points & Schedulers.**
   - Deploy Lambda handlers for DataManager, RegimeFilter, and TelegramNotifier.
   - CloudWatch Event Rules for daily triggers (23:00 UTC data ingestion, 09:00 UTC pulse).
 

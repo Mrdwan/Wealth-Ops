@@ -8,7 +8,7 @@ A cloud-native, automated trading system for a **Solo Trader (Irish Tax Resident
 - **Hybrid AI Model:** "Hard Guards, Soft Skills." We enforce Risk Rules (Hard), AI learns Entry Patterns (Soft).
 
 ## 2. The Cloud Stack (AWS)
-- **Ingest & Scout:** AWS Lambda (Daily Drip) & Fargate (Bulk Bootstrap). Features "Smart Gap-Fill".
+- **Ingest & Scout:** AWS Lambda (Daily Drip via CloudWatch Events) & Fargate (Bulk Bootstrap). Features "Smart Gap-Fill".
 - **The Specialist (Training):** AWS Fargate (ECS). Spins up, trains XGBoost models for each asset.
 - **The Judge & Execution:** AWS Lambda. Reads S3 models, predicts, calls LLM API, executes trade.
 - **State Store:** AWS DynamoDB (Ledger, Holdings, Config).

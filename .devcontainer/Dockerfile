@@ -6,8 +6,9 @@ LABEL org.opencontainers.image.description="Development container for Wealth-Ops
 LABEL org.opencontainers.image.source="https://github.com/wealth-ops/wealth-ops"
 LABEL project="wealth-ops"
 
-# Install system dependencies
+# Install system dependencies (bash required for devcontainer features)
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    bash \
     git \
     curl \
     build-essential \
