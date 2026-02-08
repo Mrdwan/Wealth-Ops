@@ -3,7 +3,6 @@
 from datetime import date
 from unittest.mock import MagicMock, patch
 
-import pandas as pd
 import pytest
 
 from src.modules.data.protocols import ProviderError

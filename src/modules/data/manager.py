@@ -9,8 +9,8 @@ from typing import Any
 
 import boto3
 import pandas as pd
-import pyarrow as pa
-import pyarrow.parquet as pq
+import pyarrow as pa  # type: ignore[import-untyped]
+import pyarrow.parquet as pq  # type: ignore[import-untyped]
 from botocore.exceptions import ClientError
 
 from src.modules.data.protocols import MarketDataProvider, ProviderError
@@ -59,9 +59,7 @@ class DataManager:
         self._primary = primary_provider
         self._fallback = fallback_provider
         self._s3 = s3_client or boto3.client("s3", region_name=config.aws_region)
-        self._dynamodb = dynamodb_client or boto3.client(
-            "dynamodb", region_name=config.aws_region
-        )
+        self._dynamodb = dynamodb_client or boto3.client("dynamodb", region_name=config.aws_region)
 
     def ingest(self, ticker: str, max_history_years: int = 50) -> int:
         """Ingest market data for a ticker with gap-fill logic.

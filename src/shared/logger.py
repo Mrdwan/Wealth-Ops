@@ -32,7 +32,7 @@ class JSONFormatter(logging.Formatter):
             log_data["exception"] = self.formatException(record.exc_info)
 
         if hasattr(record, "extra"):
-            log_data.update(record.extra)  # type: ignore[arg-type]
+            log_data.update(record.extra)
 
         return json.dumps(log_data)
 

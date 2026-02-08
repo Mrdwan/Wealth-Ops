@@ -1,11 +1,10 @@
 """Tests for DataManager orchestrator."""
 
 from datetime import date, timedelta
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import pandas as pd
 import pytest
-from moto import mock_aws
 
 from src.modules.data.manager import DataManager, FetchMode
 from src.modules.data.protocols import ProviderError
@@ -155,9 +154,7 @@ class TestProviderFailover:
     ) -> None:
         """Test fallback is used when primary fails."""
         mock_primary = MagicMock()
-        mock_primary.get_daily_candles.side_effect = ProviderError(
-            "Tiingo", "AAPL", "API Error"
-        )
+        mock_primary.get_daily_candles.side_effect = ProviderError("Tiingo", "AAPL", "API Error")
 
         mock_fallback = MagicMock()
         mock_fallback.get_daily_candles.return_value = sample_df
@@ -179,14 +176,10 @@ class TestProviderFailover:
     def test_raises_when_both_fail(self, config: Config) -> None:
         """Test raises when both providers fail."""
         mock_primary = MagicMock()
-        mock_primary.get_daily_candles.side_effect = ProviderError(
-            "Tiingo", "AAPL", "API Error"
-        )
+        mock_primary.get_daily_candles.side_effect = ProviderError("Tiingo", "AAPL", "API Error")
 
         mock_fallback = MagicMock()
-        mock_fallback.get_daily_candles.side_effect = ProviderError(
-            "Yahoo", "AAPL", "Rate limited"
-        )
+        mock_fallback.get_daily_candles.side_effect = ProviderError("Yahoo", "AAPL", "Rate limited")
 
         manager = DataManager(
             config=config,

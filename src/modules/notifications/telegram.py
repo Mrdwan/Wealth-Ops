@@ -47,9 +47,7 @@ class TelegramNotifier:
             dynamodb_client: Optional boto3 DynamoDB client (for testing).
         """
         self._config = config
-        self._dynamodb = dynamodb_client or boto3.client(
-            "dynamodb", region_name=config.aws_region
-        )
+        self._dynamodb = dynamodb_client or boto3.client("dynamodb", region_name=config.aws_region)
         self._api_url = f"https://api.telegram.org/bot{config.telegram_bot_token}"
 
     def send_daily_pulse(self) -> bool:

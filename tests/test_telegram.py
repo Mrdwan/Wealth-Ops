@@ -86,13 +86,19 @@ class TestTelegramNotifier:
     def test_gather_pulse_data_from_dynamodb(self, config: Config) -> None:
         """Test gathering pulse data from DynamoDB."""
         mock_dynamodb = MagicMock()
-        
+
         # Mock system table response (market status)
         mock_dynamodb.get_item.side_effect = [
             {"Item": {"key": {"S": "market_status"}, "value": {"S": "BULL"}}},
-            {"Item": {"asset_type": {"S": "CASH"}, "ticker": {"S": "EUR"}, "quantity": {"N": "10000"}}},
+            {
+                "Item": {
+                    "asset_type": {"S": "CASH"},
+                    "ticker": {"S": "EUR"},
+                    "quantity": {"N": "10000"},
+                }
+            },
         ]
-        
+
         # Mock portfolio query response (positions count)
         mock_dynamodb.query.return_value = {"Count": 5}
 

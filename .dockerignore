@@ -33,7 +33,7 @@ venv/
 node_modules/
 
 # CDK
-cdk.out/
+**/cdk.out/
 
 # Coverage and test artifacts
 htmlcov/

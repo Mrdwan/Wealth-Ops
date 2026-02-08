@@ -7,16 +7,7 @@ repos:
         args: [--fix, --exit-non-zero-on-fix]
       - id: ruff-format
 
-  # MyPy - Type checking
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.8.0
-    hooks:
-      - id: mypy
-        args: [--strict]
-        additional_dependencies:
-          - pandas-stubs
-          - boto3-stubs
-          - types-requests
+
 
   # General pre-commit hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -37,9 +28,16 @@ repos:
     hooks:
       - id: poetry-check
 
-  # CDK - Synth check (custom local hook)
+  # Local hooks
   - repo: local
     hooks:
+      - id: mypy
+        name: mypy
+        entry: poetry run mypy
+        language: system
+        types: [python]
+        require_serial: true
+
       - id: cdk-synth
         name: CDK Synth Check
         entry: bash -c 'cd infra && poetry run cdk synth --quiet'

@@ -5,6 +5,8 @@ This stack defines the compute resources:
 - Market Pulse Lambda (Daily at 09:00 UTC)
 """
 
+from typing import Any
+
 from aws_cdk import Duration, Stack, Tags
 from aws_cdk import aws_events as events
 from aws_cdk import aws_events_targets as targets
@@ -23,7 +25,7 @@ class ComputeStack(Stack):
         construct_id: str,
         foundation_stack: FoundationStack,
         tags: dict[str, str] | None = None,
-        **kwargs: object,
+        **kwargs: Any,
     ) -> None:
         """Initialize the Compute Stack.
 
@@ -64,14 +66,14 @@ class ComputeStack(Stack):
                 "S3_BUCKET": self._foundation.data_bucket.bucket_name,
                 "CONFIG_TABLE": self._foundation.config_table.table_name,
                 "SYSTEM_TABLE": self._foundation.system_table.table_name,
-                # Secrets should ideally be injected via Secrets Manager, 
+                # Secrets should ideally be injected via Secrets Manager,
                 # but for this phase we expect them in environment or .env locally
                 # We'll map them from the build environment (if using GitHub Actions / .env)
                 # For CDK, we usually pass them from context or secrets.
-                # Assuming they are present in the Lambda execution env via other means 
+                # Assuming they are present in the Lambda execution env via other means
                 # or we just rely on `dotenv` which we don't use in prod lambda usually.
                 # EDIT: We need to pass them. For now, let's assume they are set in the
-                # console or passed via some config mechanism. 
+                # console or passed via some config mechanism.
                 # For the sake of this file, we won't hardcode keys.
             },
             description="Ingests market data daily using provider failover",

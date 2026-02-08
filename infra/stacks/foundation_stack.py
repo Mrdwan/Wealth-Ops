@@ -6,6 +6,7 @@ This stack creates the foundational resources that all other phases build upon:
 - IAM roles for Lambda and Fargate execution
 - DynamoDB tables for state management
 """
+from typing import Any
 
 from aws_cdk import Duration, RemovalPolicy, Stack, Tags
 from aws_cdk import aws_dynamodb as dynamodb
@@ -23,7 +24,7 @@ class FoundationStack(Stack):
         scope: Construct,
         construct_id: str,
         tags: dict[str, str] | None = None,
-        **kwargs: object,
+        **kwargs: Any,
     ) -> None:
         """Initialize the Foundation Stack.
 
@@ -365,4 +366,3 @@ class FoundationStack(Stack):
     def system_table(self) -> dynamodb.Table:
         """Get the System DynamoDB table."""
         return self._system_table
-

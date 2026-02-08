@@ -19,3 +19,7 @@ trigger: always_on
 - **Coverage:** 100% Branch Coverage required on `src/modules/*`.
 - **Testing:** strictly `pytest`. All AWS calls (boto3) must be mocked with `moto`.
 - **Typing:** Strict `mypy` compliance.
+
+## 4. The "Living Documentation" Clause
+- **Constraint:** Documentation is not an afterthought.
+- **Action:** Update `docs/` (Architecture, Roadmap, or Changelog) before finishing every session.

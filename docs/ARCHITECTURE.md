@@ -28,7 +28,7 @@ All AWS services are emulated locally via **LocalStack** for development and tes
 | `localstack` | `wealth-ops-localstack` | Emulates S3, DynamoDB locally |
 | `test` | `wealth-ops-test` | Lightweight pytest runner (pre-commit) |
 
-- **Config:** `docker-compose.yml` + `.devcontainer/devcontainer.json`
+- **Config:** `docker-compose.yml` + `.devcontainer/devcontainer.json` (Includes `docker-outside-of-docker` & `node` features)
 - **AWS Endpoint:** `http://localstack:4566` (auto-configured via env vars)
 - **Persistence:** LocalStack data persists between restarts
 - **Pre-commit:** Tests run automatically via `pytest-docker` hook (uses `moto` mocking)

@@ -33,7 +33,7 @@ def bull_market_df() -> pd.DataFrame:
     # 250 days of data with upward trend
     dates = [date(2024, 1, 1) + pd.Timedelta(days=i) for i in range(250)]
     closes = [100 + i * 0.5 for i in range(250)]  # Upward trend
-    
+
     df = pd.DataFrame({"close": closes}, index=dates)
     df.index.name = "date"
     return df
@@ -45,7 +45,7 @@ def bear_market_df() -> pd.DataFrame:
     # 250 days of data with downward trend at end
     dates = [date(2024, 1, 1) + pd.Timedelta(days=i) for i in range(250)]
     closes = [200 - i * 0.3 for i in range(250)]  # Downward trend
-    
+
     df = pd.DataFrame({"close": closes}, index=dates)
     df.index.name = "date"
     return df

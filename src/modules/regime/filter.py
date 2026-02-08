@@ -56,9 +56,7 @@ class RegimeFilter:
         """
         self._config = config
         self._provider = provider
-        self._dynamodb = dynamodb_client or boto3.client(
-            "dynamodb", region_name=config.aws_region
-        )
+        self._dynamodb = dynamodb_client or boto3.client("dynamodb", region_name=config.aws_region)
 
     def evaluate(self) -> MarketStatus:
         """Evaluate current market regime and update DynamoDB.
@@ -108,9 +106,7 @@ class RegimeFilter:
         df = self._provider.get_daily_candles(SP500_TICKER, start_date, today)
 
         if len(df) < MA_PERIOD:
-            logger.warning(
-                f"Insufficient data for {MA_PERIOD}-day MA: only {len(df)} records"
-            )
+            logger.warning(f"Insufficient data for {MA_PERIOD}-day MA: only {len(df)} records")
             return MarketStatus.UNKNOWN
 
         # Calculate 200-day Simple Moving Average

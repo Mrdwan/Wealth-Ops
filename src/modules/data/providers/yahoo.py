@@ -6,7 +6,7 @@ Fallback data source using yfinance library (unofficial scraper).
 from datetime import date
 
 import pandas as pd
-import yfinance as yf
+import yfinance as yf  # type: ignore[import-untyped]
 
 from src.modules.data.protocols import ProviderError
 from src.shared.logger import get_logger
@@ -93,7 +93,7 @@ class YahooProvider:
         )
 
         # Convert index to date
-        df.index = df.index.date
+        df.index = df.index.date  # type: ignore[attr-defined]
         df.index.name = "date"
 
         # Select standard columns

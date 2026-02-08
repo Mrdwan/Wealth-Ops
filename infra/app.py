@@ -2,7 +2,7 @@
 """AWS CDK App entrypoint for Wealth-Ops infrastructure."""
 
 import aws_cdk as cdk
-
+from stacks.compute_stack import ComputeStack
 from stacks.foundation_stack import FoundationStack
 
 app = cdk.App()
@@ -17,7 +17,6 @@ foundation = FoundationStack(
     tags={"Project": "Wealth-Ops", "Environment": "dev"},
 )
 
-from stacks.compute_stack import ComputeStack
 
 ComputeStack(
     app,

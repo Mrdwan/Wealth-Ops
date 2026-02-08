@@ -5,6 +5,10 @@
     ],
     "service": "dev",
     "workspaceFolder": "/workspaces/wealth-ops",
+    "features": {
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+        "ghcr.io/devcontainers/features/node:1": {}
+    },
     "customizations": {
         "vscode": {
             "extensions": [
@@ -19,7 +23,7 @@
             }
         }
     },
-    "postCreateCommand": "poetry install --with infra",
+    "postCreateCommand": "npm install -g aws-cdk && poetry install --with infra",
     "shutdownAction": "stopCompose",
     "forwardPorts": [
         4566
