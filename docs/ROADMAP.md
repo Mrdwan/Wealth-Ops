@@ -75,7 +75,7 @@
   - Cards include composite score breakdown (which components contribute most).
   - Trap Order parameters calculated and included.
 
-- [ ] **Step 2A.5: Market-Level Data Integration.**
+- [x] **Step 2A.5: Market-Level Data Integration.**
   - VIX, SPY, DXY data flowing into signal pipeline.
   - Staleness policy enforced: >24h stale → guard defaults to FAIL, Telegram alert.
 

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — Phase 2A Market-Level Data Integration (Step 2A.5)
+- **Market Context** (`src/modules/signals/market_context.py`): `MarketContext` frozen dataclass carrying VIX close, SPY close/SMA200, DXY close/SMA200 into the signal pipeline. Convenience properties: `spy_above_sma200`, `dxy_below_sma200`, `vix_below_panic`.
+- **Market Data Loader** (`src/modules/signals/market_context.py`): `MarketDataLoader` reads OHLCV parquets (SPY, DXY/UUP) and macro parquets (VIXCLS) from S3, computes SMA(200), and builds `MarketContext`. Handles missing data gracefully (NaN fallbacks).
+- **Staleness Guard** (`src/modules/signals/staleness_guard.py`): `StalenessGuard` checks DynamoDB timestamps for VIX, SPY, and DXY freshness. >24h stale → `StalenessResult.passed=False` + pre-formatted Telegram alert. Defaults to FAIL on DynamoDB errors (safe-side).
+- **Data classes**: `SourceStaleness` (per-source detail), `StalenessResult` (aggregated pass/fail + alert message).
+
 ### Added — Phase 2A Momentum Signal Cards (Step 2A.4)
 - **Signal Card model** (`src/modules/signals/signal_card.py`): `SignalCard` frozen dataclass containing all signal data (ticker, direction, composite score, component breakdown, trap order params, broker/tax info). `SignalCardFormatter` produces Telegram-ready message matching ARCHITECTURE.md Section 12.1 template.
 - **Trap Order calculator** (`src/modules/signals/trap_order.py`): `TrapOrderCalculator` class with dual-constraint position sizing (risk-budget vs concentration cap). ADX-scaled TP: `clamp(2 + ADX/30, 2.5, 4.5) × ATR`. Entry: `High + 0.02 × ATR`. SL: `Entry − 2 × ATR`.
@@ -21,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Minimum data requirement: 273 bars (~13 months) for 12-month momentum with 1-month skip.
 
 ### Tests
-- **326 tests passing** (added signal card and trap order tests).
+- **363 tests passing** (added market context and staleness guard tests).
 - **100% branch coverage** maintained.
 
 ### Added — Phase 1 v3 Data Pipelines (Steps 1.6–1.10)
