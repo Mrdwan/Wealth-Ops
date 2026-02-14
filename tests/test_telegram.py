@@ -346,3 +346,58 @@ class TestSendReply:
 
         assert result is False
 
+
+class TestSendSignalCard:
+    """Tests for send_signal_card() method."""
+
+    @patch("src.modules.notifications.telegram.httpx.Client")
+    def test_send_signal_card_success(
+        self,
+        mock_client_class: MagicMock,
+        config: Config,
+    ) -> None:
+        """Test successful signal card sending."""
+        mock_response = MagicMock()
+        mock_response.raise_for_status.return_value = None
+        mock_client = MagicMock()
+        mock_client.post.return_value = mock_response
+        mock_client.__enter__ = MagicMock(return_value=mock_client)
+        mock_client.__exit__ = MagicMock(return_value=False)
+        mock_client_class.return_value = mock_client
+
+        notifier = TelegramNotifier(config=config, dynamodb_client=MagicMock())
+        result = notifier.send_signal_card("🟢 SIGNAL — LONG XAU/USD")
+
+        assert result is True
+        mock_client.post.assert_called_once()
+
+    def test_send_signal_card_no_credentials(
+        self,
+        config_no_telegram: Config,
+    ) -> None:
+        """Test signal card returns False without credentials."""
+        notifier = TelegramNotifier(
+            config=config_no_telegram,
+            dynamodb_client=MagicMock(),
+        )
+        result = notifier.send_signal_card("Test signal")
+
+        assert result is False
+
+    @patch("src.modules.notifications.telegram.httpx.Client")
+    def test_send_signal_card_http_error(
+        self,
+        mock_client_class: MagicMock,
+        config: Config,
+    ) -> None:
+        """Test signal card returns False on HTTP error."""
+        mock_client = MagicMock()
+        mock_client.post.side_effect = httpx.HTTPError("Connection refused")
+        mock_client.__enter__ = MagicMock(return_value=mock_client)
+        mock_client.__exit__ = MagicMock(return_value=False)
+        mock_client_class.return_value = mock_client
+
+        notifier = TelegramNotifier(config=config, dynamodb_client=MagicMock())
+        result = notifier.send_signal_card("Test signal")
+
+        assert result is False

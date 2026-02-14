@@ -7,12 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added — Phase 2A Momentum Signal Cards (Step 2A.4)
+- **Signal Card model** (`src/modules/signals/signal_card.py`): `SignalCard` frozen dataclass containing all signal data (ticker, direction, composite score, component breakdown, trap order params, broker/tax info). `SignalCardFormatter` produces Telegram-ready message matching ARCHITECTURE.md Section 12.1 template.
+- **Trap Order calculator** (`src/modules/signals/trap_order.py`): `TrapOrderCalculator` class with dual-constraint position sizing (risk-budget vs concentration cap). ADX-scaled TP: `clamp(2 + ADX/30, 2.5, 4.5) × ATR`. Entry: `High + 0.02 × ATR`. SL: `Entry − 2 × ATR`.
+- **`send_signal_card()`** method on `TelegramNotifier` for delivering formatted signal cards via Telegram.
+- Helper functions: `_tax_label_for_broker()`, `_ttl_label_for_asset_class()`, `_format_component_name()`.
+
 ### Added — Phase 2A Momentum Composite (Step 2A.3)
 - **Momentum Composite Score** (`src/modules/signals/momentum_composite.py`): `MomentumComposite` class computing 6-component z-score-weighted signal. Components: Momentum 40% (Jegadeesh & Titman), Trend 20% (200 SMA), RSI 15%, Volume 10%, ATR Volatility 10%, Support/Resistance 5% (Donchian).
 - **Component calculators** (`src/modules/signals/components.py`): Six pure functions for raw score computation. Profile-aware: volume component skipped for `volume_features=false` assets with proportional weight redistribution.
 - **Signal classification**: `SignalClassification` StrEnum — STRONG_BUY (>2.0σ), BUY (>1.5σ), NEUTRAL (±1.5σ), SELL (<-1.5σ), STRONG_SELL (<-2.0σ).
 - **CompositeResult** frozen dataclass: composite_score, signal, components dict, weights_used.
 - Minimum data requirement: 273 bars (~13 months) for 12-month momentum with 1-month skip.
+
+### Tests
+- **326 tests passing** (added signal card and trap order tests).
+- **100% branch coverage** maintained.
 
 ### Added — Phase 1 v3 Data Pipelines (Steps 1.6–1.10)
 - **Asset Profile Schema v3** (`src/shared/profiles.py`): `AssetProfile` frozen dataclass with 4 templates (EQUITY, COMMODITY_HAVEN, COMMODITY_CYCLICAL, INDEX), DynamoDB serialization, and S3 prefix routing.
@@ -33,10 +43,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **NaN Guard Bug** in `support_resistance_score()` (`components.py`): `.where(channel_range > 0, 0.5)` replaced warmup `NaN` with `0.5` because `NaN > 0` is `False`. Fixed with `is_warmup = channel_range.isna()` guard.
 - **NaN Guard Bug** in `_zscore()` (`momentum_composite.py`): Same pattern — `.where(rolling_std > 0, 0.0)` killed warmup `NaN`. Fixed identically.
 - **Coverage gaps closed**: Added error-branch tests for `macro_manager.py`, `commands.py`, and `telegram.py` (11 new tests).
-
-### Tests
-- **276 tests passing** (added 11 error-branch tests).
-- **100% branch coverage** achieved — all `try/except` paths now tested.
 
 ## [3.0.0] - 2026-02-12
 

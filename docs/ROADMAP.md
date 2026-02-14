@@ -70,7 +70,7 @@
   - Volume component skipped for `volume_features = false` assets, weights redistribute.
   - Thresholds: STRONG_BUY >2.0σ, BUY >1.5σ, NEUTRAL ±1.5σ, SELL <-1.5σ.
 
-- [ ] **Step 2A.4: Momentum Signal Cards.**
+- [x] **Step 2A.4: Momentum Signal Cards.**
   - Telegram signal delivery with entry zones, stop loss, TP, position size, reasoning.
   - Cards include composite score breakdown (which components contribute most).
   - Trap Order parameters calculated and included.

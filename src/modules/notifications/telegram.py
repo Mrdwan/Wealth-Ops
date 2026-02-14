@@ -64,6 +64,18 @@ class TelegramNotifier:
             logger.error(f"Failed to send daily pulse: {e}")
             return False
 
+    def send_signal_card(self, card_text: str) -> bool:
+        """Send a formatted signal card via Telegram.
+
+        Args:
+            card_text: Pre-formatted signal card message text.
+
+        Returns:
+            True if sent successfully, False otherwise.
+        """
+        logger.info("Sending signal card via Telegram")
+        return self._send_message(card_text)
+
     def _gather_pulse_data(self) -> DailyPulse:
         """Gather data for daily pulse from DynamoDB.
 
