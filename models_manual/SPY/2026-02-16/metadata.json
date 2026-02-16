@@ -1,0 +1,22 @@
+{
+  "ticker": "SPY",
+  "metrics": {
+    "auc": 0.7328725038402457,
+    "logloss": 0.4746226763208895,
+    "best_iteration": 19
+  },
+  "training_date": "2026-02-16T21:18:42.941161",
+  "config": {
+    "max_depth": 3,
+    "learning_rate": 0.05,
+    "n_estimators": 100,
+    "early_stopping_rounds": 50,
+    "subsample": 0.8,
+    "colsample_bytree": 0.8,
+    "objective": "binary:logistic",
+    "eval_metric": "logloss",
+    "scale_pos_weight": 1.0,
+    "target_window": 5,
+    "target_threshold": 0.02
+  }
+}
